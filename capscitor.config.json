@@ -1,0 +1,6 @@
+{
+"appId": "com.notdefteri.app",
+"appName": "NotDefteri",
+"webDir": "www",
+"bundledWebRuntime": false
+}
