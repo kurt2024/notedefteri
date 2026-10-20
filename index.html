@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="tr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dyt. Fikret Kurt | Klinik Beslenme ve Sağlıklı Yaşam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            DEFAULT: '#345e52',
+                            light: '#f3f7f5',
+                            soft: '#e1ede7',
+                            dark: '#223e36'
+                        },
+                        cream: {
+                            DEFAULT: '#fbf9f6',
+                            card: '#ffffff',
+                            border: '#eae5dc'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fbf9f6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #345e52;
+        }
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-animation {
+            animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-cream text-slate-700 font-sans min-h-screen selection:bg-sage-soft selection:text-sage-dark overflow-x-hidden">
+
+    <!-- 1. ŞIK KARŞILAMA ANİMASYONU / GİRİŞ EFEKTİ -->
+    <div id="welcomeModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-700">
+        <div class="bg-white border border-sage-soft p-8 md:p-10 rounded-3xl max-w-md w-full text-center relative shadow-2xl modal-animation">
+            <div class="w-16 h-16 rounded-2xl bg-sage-light text-sage flex items-center justify-center mx-auto mb-5 text-2xl shadow-inner">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <span class="text-xs uppercase tracking-[0.2em] text-sage font-semibold">Resmî Sağlık Platformu</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-1 mb-3">Dyt. Fikret Kurt</h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                Bilimsel beslenme rehberliği, klinik protokoller ve güncellenen değişim listesi hesaplayıcımıza hoş geldiniz.
+            </p>
+            <button onclick="closeWelcomeModal()" class="w-full py-3.5 px-6 bg-sage hover:bg-sage-dark text-white font-semibold rounded-xl shadow-lg shadow-sage/20 transition transform active:scale-95 text-sm">
+                Siteye Giriş Yap 🌱
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. SABİT ÜST MENÜ VE MOBİL HAMBURGER MENÜ -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-cream-border px-6 py-4 flex items-center justify-between shadow-xs">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-sage-light flex items-center justify-center text-sage font-bold border border-sage-soft">
+                FK
+            </div>
+            <div>
+                <h1 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    Dyt. Fikret Kurt 
+                    <i class="fa-solid fa-circle-check text-sage text-xs" title="Onaylı Uzman"></i>
+                </h1>
+                <p class="text-[11px] text-sage font-medium">Klinik Diyetisyen & Beslenme Uzmanı</p>
+            </div>
+        </div>
+
+        <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider text-slate-600">
+            <a href="#anasayfa" class="hover:text-sage transition">Ana Sayfa</a>
+            <a href="#hakkimda" class="hover:text-sage transition">Hakkımda</a>
+            <a href="#kose" class="text-sage font-bold hover:underline transition">💡 Haftanın Köşesi</a>
+            <a href="#tarifler" class="hover:text-sage transition">Sağlıklı Menüler</a>
+            <a href="#hastaliklar" class="hover:text-sage transition">Reçeteler</a>
+            <a href="#hesaplayici" class="hover:text-sage transition">Hesaplayıcılar</a>
+            <a href="#degisimHesapla" class="text-sage font-bold hover:underline transition">🔄 Değişim Hesapla</a>
+            <a href="#kitaplar" class="hover:text-sage transition">Kitaplık</a>
+            <a href="#kurumlar" class="hover:text-sage transition">Kurumlar</a>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="scrollToSection('iletisim')" class="hidden sm:inline-block px-5 py-2.5 rounded-full bg-sage-light text-sage hover:bg-sage hover:text-white transition text-xs font-bold tracking-wider uppercase border border-sage-soft">
+                Randevu Al
+            </button>
+            <button onclick="toggleMobileMenu()" class="text-sage p-2 lg:hidden focus:outline-none text-xl">
+                <i class="fa-solid fa-bars" id="menuIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobil Yan Çekmece Menü -->
+    <div id="mobileMenu" class="fixed inset-y-0 right-0 z-50 w-80 bg-white border-l border-cream-border p-6 shadow-2xl transform translate-x-full transition-transform duration-300 lg:hidden flex flex-col justify-between">
+        <div>
+            <div class="flex justify-between items-center mb-8 border-b border-cream-border pb-4">
+                <span class="text-sage font-bold text-base">Menü</span>
+                <button onclick="toggleMobileMenu()" class="text-slate-400 hover:text-slate-900 text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <ul class="space-y-4 font-medium text-slate-700 text-sm">
+                <li><a href="#anasayfa" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-house text-sage w-5"></i> Ana Sayfa</a></li>
+                <li><a href="#hakkimda" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-user-doctor text-sage w-5"></i> Hakkımda</a></li>
+                <li><a href="#kose" onclick="toggleMobileMenu()" class="flex items-center gap-3 text-sage font-bold"><i class="fa-solid fa-lightbulb text-sage w-5"></i> Haftanın Merak Uyandıran Köşesi</a></li>
+                <li><a href="#tarifler" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-utensils text-sage w-5"></i> Sağlıklı Menüler</a></li>
+                <li><a href="#hastaliklar" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-notes-medical text-sage w-5"></i> Hastalık Reçeteleri</a></li>
+                <li><a href="#hesaplayici" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-calculator text-sage w-5"></i> Kalori & VKİ Hesapla</a></li>
+                <li><a href="#degisimHesapla" onclick="toggleMobileMenu()" class="flex items-center gap-3 text-sage font-bold"><i class="fa-solid fa-table-cells text-sage w-5"></i> Değişim Listesi Hesaplayıcı</a></li>
+                <li><a href="#kitaplar" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-book text-sage w-5"></i> Beslenme Kitaplığı</a></li>
+                <li><a href="#kurumlar" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-building-columns text-sage w-5"></i> Resmî Kurumlar</a></li>
+                <li><a href="#iletisim" onclick="toggleMobileMenu()" class="flex items-center gap-3 hover:text-sage transition"><i class="fa-solid fa-envelope text-sage w-5"></i> İletişim Formu</a></li>
+            </ul>
+        </div>
+        <div class="text-xs text-slate-400 text-center pt-4 border-t border-cream-border">
+            &copy; 2026 Dyt. Fikret Kurt
+        </div>
+    </div>
+
+    <!-- 3. FERAH HERO (ANA SAYFA) ALANI -->
+    <section id="anasayfa" class="max-w-6xl mx-auto px-4 py-20 md:py-28 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6">
+            <span class="inline-block py-1.5 px-4 rounded-full bg-sage-light text-sage text-xs font-bold tracking-widest uppercase border border-sage-soft">
+                Bilimsel & Sürdürülebilir Beslenme
+            </span>
+            <h1 class="text-4xl md:text-6xl font-bold text-slate-900 leading-tight">
+                Doğru Beslenme, <br><span class="text-sage">Sürdürülebilir Sağlık</span>
+            </h1>
+            <p class="text-slate-600 text-base md:text-lg leading-relaxed font-light">
+                TÜBER ilkelerine uygun hazırlanan özel beslenme menüleri, klinik beslenme reçeteleri ve güncellenen değişim listesi hesaplayıcımızla yaşam kalitenizi zirveye taşıyın.
+            </p>
+            <div class="flex flex-wrap gap-4 pt-2">
+                <a href="#degisimHesapla" class="py-3.5 px-7 bg-sage hover:bg-sage-dark text-white font-semibold rounded-xl shadow-md transition text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> Değişim Hesaplayıcıya Git
+                </a>
+                <a href="#iletisim" class="py-3.5 px-7 bg-white hover:bg-sage-light text-slate-700 hover:text-sage font-semibold rounded-xl border border-cream-border transition text-sm">
+                    Randevu Alın 🌿
+                </a>
+            </div>
+        </div>
+        <div class="relative flex justify-center">
+            <div class="w-full max-w-md h-[420px] rounded-3xl overflow-hidden shadow-xl border border-cream-border bg-sage-light">
+                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80" alt="Beslenme Sağlık" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. HAKKIMDA BÖLÜMÜ -->
+    <section class="max-w-4xl mx-auto px-4 py-16" id="hakkimda">
+        <div class="text-center mb-10">
+            <span class="text-sage text-xs uppercase tracking-[0.2em] font-semibold">Uzman Vizyonu</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-1">Hakkımda</h2>
+        </div>
+        <div class="bg-white p-8 md:p-12 rounded-3xl border border-cream-border shadow-xs text-center">
+            <p class="text-slate-600 text-base md:text-lg leading-relaxed font-light">
+                Diyetetik alanındaki akademik eğitimim ve klinik tecrübemle; bilimi ve besin dengesini en şık şekilde harmanlayarak sürdürülebilir, sağlıklı yaşam alışkanlıkları kazandırmayı hedefliyorum. Doğru bilgiyi, ferah ve erişilebilir bir deneyimle buluşturuyoruz.
+            </p>
+        </div>
+    </section>
+
+    <!-- 9. HAFTANIN MERAK UYANDIRAN BİLİM & SAĞLIK KÖŞESİ -->
+    <section class="max-w-5xl mx-auto px-4 py-16" id="kose">
+        <div class="text-center mb-12">
+            <span class="text-sage text-xs uppercase tracking-[0.2em] font-semibold">Her Hafta Yeni Bir Konu</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-1">💡 Haftanın Merak Uyandıran Bilim & Sağlık Köşesi</h2>
+            <p class="text-slate-600 text-sm mt-2 max-w-2xl mx-auto">Ziyaretçilerimiz için her hafta güncellenen, beslenme biliminin en şaşırtıcı ve merak edilen sırlarını keşfedin.</p>
+        </div>
+
+        <div class="bg-white p-8 md:p-12 rounded-3xl border border-cream-border shadow-md space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-cream-border pb-6">
+                <div>
+                    <span class="bg-sage-light text-sage text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">Haftanın Konusu #04</span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-2">Bağırsaklarımız İkinci Beynimiz mi? Mikrobiyota ve Ruh Hali Bağlantısı</h3>
+                </div>
+                <div class="text-xs text-slate-500 font-medium">
+                    <i class="fa-regular fa-calendar text-sage mr-1"></i> Bu Hafta Güncellendi
+                </div>
+            </div>
+
+            <div class="space-y-4 text-slate-600 text-base font-light leading-relaxed">
+                <p>
+                    Son yıllarda yapılan nörogastroenteroloji çalışmaları, bağırsaklarımızda yaşayan trilyonlarca mikroorganizmanın (mikrobiyota) sadece sindirimi değil; ruh halimizi, stres seviyemizi ve hatta karar verme mekanizmamızı doğrudan etkilediğini kanıtlamıştır.
+                </p>
+                <div class="p-5 rounded-2xl bg-sage-light border border-sage-soft space-y-2 text-sm text-slate-700">
+                    <strong class="text-sage block font-bold text-base"><i class="fa-solid fa-flask text-sage mr-2"></i> Bilimsel Gerçek:</strong>
+                    <p>Vücudumuzdaki mutluluk hormonu olarak bilinen <strong>serotonin</strong>in yaklaşık <strong>%90'ı bağırsaklarda</strong> üretilir! Fermente gıdalar (kefir, ev yoğurdu, turşu) ve lifli besinler tüketmek, bağırsak florasını zenginleştirerek zihinsel berraklığı ve psikolojik direnci artırır.</p>
+                </div>
+                <p>
+                    Önümüzdeki hafta bu köşede: <em>"Aralıklı Açlık (Intermittent Fasting) Hücresel Temizlikte (Otofaji) Nasıl Rol Oynar?"</em> konusunu inceleyeceğiz. Takipte kalınız!
+                </p>
+            </div>
+
+            <div class="pt-6 border-t border-cream-border">
+                <h4 class="text-xs font-bold text-sage uppercase tracking-wider mb-3">Önceki Haftaların Konuları (Arşiv)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button onclick="alertArchived(1)" class="p-3 text-left rounded-xl bg-cream hover:bg-sage-light border border-cream-border transition text-xs font-semibold text-slate-700">
+                        🗓️ Hafta #3: Kronobiyoloji ve Yemek Saatleri
+                    </button>
+                    <button onclick="alertArchived(2)" class="p-3 text-left rounded-xl bg-cream hover:bg-sage-light border border-cream-border transition text-xs font-semibold text-slate-700">
+                        🗓️ Hafta #2: Gizli Şeker ve Metabolik Tuzaklar
+                    </button>
+                    <button onclick="alertArchived(3)" class="p-3 text-left rounded-xl bg-cream hover:bg-sage-light border border-cream-border transition text-xs font-semibold text-slate-700">
+                        🗓️ Hafta #1: Antioksidanların Hücresel Gücü
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SAĞLIKLI MENÜLER & TÜBER TABAKLAR -->
+    <section class="max-w-6xl mx-auto px-4 py-16" id="tarifler">
+        <div class="text-center mb-12">
+            <span class="text-sage text-xs uppercase tracking-[0.2em] font-semibold">Beslenme Rehberi</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-1">Sağlıklı Menüler & Yemekler</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div onclick="openMenuModal('tuber')" class="bg-white rounded-3xl overflow-hidden border border-cream-border hover:border-sage transition duration-300 cursor-pointer group shadow-xs">
+                <div class="h-52 overflow-hidden bg-sage-light">
+                    <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80" alt="TÜBER" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">🥗 TÜBER Tabanlı Dengeli Tabaklar</h3>
+                    <p class="text-slate-600 text-sm font-light leading-relaxed">Makro ve mikro besin ögeleri dengelenmiş, günlük enerji ihtiyacınıza uygun pratik öğün alternatifleri.</p>
+                </div>
+            </div>
+            <div onclick="openMenuModal('geleneksel')" class="bg-white rounded-3xl overflow-hidden border border-cream-border hover:border-sage transition duration-300 cursor-pointer group shadow-xs">
+                <div class="h-52 overflow-hidden bg-sage-light">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80" alt="Geleneksel" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">🍲 Geleneksel & Modern Uyumlar</h3>
+                    <p class="text-slate-600 text-sm font-light leading-relaxed">Türk mutfağının vazgeçilmez lezzetlerinin en sağlıklı pişirme teknikleriyle modernize edilmiş halleri.</p>
+                </div>
+            </div>
+            <div onclick="openMenuModal('sifa')" class="bg-white rounded-3xl overflow-hidden border border-cream-border hover:border-sage transition duration-300 cursor-pointer group shadow-xs">
+                <div class="h-52 overflow-hidden bg-sage-light">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Şifa" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">🌿 Şifa Dolu Alternatifler</h3>
+                    <p class="text-slate-600 text-sm font-light leading-relaxed">Vitamin ve mineral değerlerini kaybetmeden hazırlayabileceğiniz bağışıklık destekleyici tarifler.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 7 KLİNİK HASTALIK BESLENME PROTOKOLÜ -->
+    <section class="max-w-4xl mx-auto px-4 py-16" id="hastaliklar">
+        <div class="text-center mb-12">
+            <span class="text-sage text-xs uppercase tracking-[0.2em] font-semibold">Klinik Protokoller</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-1">Hastalıklar ve Tıbbi Beslenme Tedavileri</h2>
+        </div>
+        <div class="bg-white p-8 md:p-12 rounded-3xl border border-cream-border shadow-xs space-y-6">
+            <p class="text-slate-600 text-center text-sm font-light mb-8">Ziyaretçilerimiz ve meslektaşlarımız için klinik patolojilere göre hazırlanan standart tıbbi beslenme protokolleri:</p>
+
+            <div class="space-y-4">
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">1. Kistik Fibrozis Beslenme Protokolü</h4>
+                    <p class="text-slate-600 text-sm font-light">Yüksek kalorili, yüksek proteinli ve pankreatik enzim destekli (PERT) beslenme. Normal ihtiyacın %120-%150'si kadar enerji hedeflenir.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">2. Glikojen Depo Hastalıkları (GDH)</h4>
+                    <p class="text-slate-600 text-sm font-light">Sık ve düzenli karbonhidrat, açlık hipoglisemesini önleyici ve gece boyu çiğ mısır nişastası desteği içeren metabolik diyet.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">3. İnsülin Direnci ve Metabolik Denge</h4>
+                    <p class="text-slate-600 text-sm font-light">Düşük glisemik indeksli karbonhidratlar, lifli gıdalar ve basit şeker kısıtlamasına dayalı insülin duyarlılığını artırıcı beslenme planı.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">4. KOAH (Kronik Obstrüktif Akciğer Hastalığı)</h4>
+                    <p class="text-slate-600 text-sm font-light">Karbondioksit üretimini azaltmak için düşük karbonhidratlı, solunum kaslarını korumak için yüksek proteinli ve sık porsiyonlu beslenme.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">5. Epilepsi (Ketojenik Diyet)</h4>
+                    <p class="text-slate-600 text-sm font-light">Nöbet kontrolünü desteklemek amacıyla yüksek yağ, düşük karbonhidrat ve kontrollü protein oranlarına sahip tıbbi ketojenik diyet.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">6. Multipl Skleroz (MS)</h4>
+                    <p class="text-slate-600 text-sm font-light">Enflamasyonu azaltan Omega-3 destekli, antioksidan ve D vitamini odaklı anti-enflamatuar beslenme protokolü.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-sage-light/50 border border-sage-soft">
+                    <h4 class="text-lg font-bold text-sage mb-2">7. Yanık Hastalıkları (Hipermetabolik Dönem)</h4>
+                    <p class="text-slate-600 text-sm font-light">Artmış doku onarımı ve kollajen sentezi için yüksek kalorili, yüksek proteinli, C vitamini ve çinko destekli yoğun iyileştirici diyet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. GELİŞMİŞ HESAPLAYICILAR (KALORİ & VKİ) -->
+    <section class="max-w-3xl mx-auto px-4 py-16" id="hesaplayici">
+        <div class="text-center mb-12">
+            <span class="text-sage text-xs uppercase tracking-[0.2em] font-semibold">İnteraktif Araçlar</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-1">Beslenme & Sağlık Hesaplayıcıları</h2>
+        </div>
+        <div class="bg-white p-8 md:p-12 rounded-3xl border border-cream-border shadow-xs">
+            <div class="flex rounded-2xl bg-sage-light p-1.5 mb-8 border border-sage-soft">
+                <button onclick="switchTab('calorieTab', this)" id="tabCalBtn" class="flex-1 py-3 text-xs md:text-sm font-bold rounded-xl bg-sage text-white transition shadow-sm">Günlük Kalori Hesapla</button>
+                <button onclick="switchTab('bmiTab', this)" id="tabBmiBtn" class="flex-1 py-3 text-xs md:text-sm font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">VKİ Hesapla</button>
+            </div>
+
+            <!-- Kalori Sekmesi -->
+            <div id="calorieTab" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Cinsiyet</label>
+                        <select id="gender" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                            <option value="male">Erkek</option>
+                            <option value="female">Kadın</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Yaş (Yıl)</label>
+                        <input type="number" id="age" placeholder="Örn: 30" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Vücut Ağırlığı (kg)</label>
+                        <input type="number" id="weightCal" step="0.1" placeholder="Örn: 75" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Boy (cm)</label>
+                        <input type="number" id="heightCal" placeholder="Örn: 175" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Fiziksel Aktivite Seviyesi</label>
+                    <select id="activity" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                        <option value="1.2">Sedanter (Hareketsiz / Masa başı iş)</option>
+                        <option value="1.375">Hafif Aktif (Haftada 1-3 gün egzersiz)</option>
+                        <option value="1.55">Orta Aktif (Haftada 3-5 gün egzersiz)</option>
+                        <option value="1.725">Çok Aktif (Haftada 6-7 gün ağır egzersiz)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Klinik Durum / Hastalık Faktörü</label>
+                    <select id="disease" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                        <option value="1.0">Normal / Sağlıklı / Standart</option>
+                        <option value="1.1">İnsülin Direnci / Metabolik Denge</option>
+                        <option value="1.15">Hipertansiyon / Kronik Böbrek / Kolesterol</option>
+                        <option value="1.25">KOAH / Onkolojik / Kronik Durumlar</option>
+                        <option value="1.4">Majör Cerrahi / Ciddi Travma / Yanık</option>
+                    </select>
+                </div>
+                <button type="button" onclick="calculateCalories()" class="w-full py-4 bg-sage hover:bg-sage-dark text-white font-bold rounded-xl shadow-md transition text-sm">
+                    Kalori İhtiyacını Hesapla ✨
+                </button>
+
+                <div id="calorieResultBox" class="hidden mt-6 p-6 bg-sage-light border-l-4 border-sage rounded-2xl space-y-2 text-sm">
+                    <h3 class="font-bold text-sage text-base">Danışman Hesaplama Sonucu:</h3>
+                    <div id="bmrResult" class="text-slate-700"></div>
+                    <div id="tdeeResult" class="text-slate-700"></div>
+                    <div id="finalResult" class="font-bold text-slate-900 pt-2 text-base"></div>
+                </div>
+            </div>
+
+            <!-- VKİ Sekmesi -->
+            <div id="bmiTab" class="hidden space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Kilonuz (kg)</label>
+                    <input type="number" id="weightBmi" step="0.1" placeholder="Örn: 70" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Boyunuz (cm)</label>
+                    <input type="number" id="heightBmi" placeholder="Örn: 175" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                </div>
+                <button type="button" onclick="calculateBMI()" class="w-full py-4 bg-sage hover:bg-sage-dark text-white font-bold rounded-xl shadow-md transition text-sm">
+                    VKİ Hesapla ✨
+                </button>
+
+                <div id="bmiResultBox" class="hidden mt-6 p-6 bg-sage-light border-l-4 border-sage rounded-2xl space-y-2 text-sm">
+                    <h3 class="font-bold text-sage text-base">VKİ Değerlendirme Sonucu:</h3>
+                    <div id="bmiOutput" class="text-slate-900 font-medium text-base"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10.B YENİ DEĞİŞİM LİSTELERİ VE ENERJİ YÜZDELERİ HESAPLAYICISI (TDD UYUMLU) -->
+    <section class="max-w-4xl mx-auto px-4 py-16" id="degisimHesapla">
+        <div class="text-center mb-10">
+            <span class="bg-sage-light text-sage text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Güncel Kılavuz</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-3 mb-2">Yeni Değişim Listeleri ve Enerji Hesaplayıcı</h2>
+            <p class="text-slate-600 max-w-xl mx-auto text-sm">Türkiye Diyetisyenler Derneği değişim listelerine tam uyumlu olarak günlük değişim adetlerinizi girin; makro dağılımlarını, toplam kaloriyi ve enerji yüzdelerini anında görüntüleyin[cite: 1].</p>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-cream-border shadow-xs p-6 md:p-8">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-cream-border text-xs uppercase tracking-wider text-slate-500 bg-sage-light">
+                            <th class="p-3 rounded-l-lg">Besin Grubu</th>
+                            <th class="p-3">1 Değişim İçeriği (CHO / Pro / Yağ)</th>
+                            <th class="p-3 text-center rounded-r-lg">Değişim Adedi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-cream-border text-sm">
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Süt - Yoğurt Grubu</td>
+                            <td class="p-3 text-slate-500 text-xs">9g CHO, 6g Pro, 6g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="sut" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Et, Peynir, Yumurta Grubu</td>
+                            <td class="p-3 text-slate-500 text-xs">0g CHO, 6g Pro, 5g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="et" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Ekmek, Tahıl, Kurubaklagil (EYG)</td>
+                            <td class="p-3 text-slate-500 text-xs">15g CHO, 2g Pro, 0g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="eyg" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Sebze Grubu</td>
+                            <td class="p-3 text-slate-500 text-xs">6g CHO, 2g Pro, 0g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="sebze" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Meyve Grubu</td>
+                            <td class="p-3 text-slate-500 text-xs">15g CHO, 0g Pro, 0g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="meyve" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Şeker Grubu</td>
+                            <td class="p-3 text-slate-500 text-xs">5g CHO, 0g Pro, 0g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="seker" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">Yağ Grubu</td>
+                            <td class="p-3 text-slate-500 text-xs">0g CHO, 0g Pro, 5g Yağ[cite: 1]</td>
+                            <td class="p-3 text-center">
+                                <input type="number" id="yag" value="0" min="0" class="w-20 px-3 py-1.5 text-center border border-cream-border rounded-lg focus:outline-none focus:border-sage font-semibold" oninput="hesaplaDegisim()">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sonuçlar Bölümü -->
+            <div class="mt-8 bg-sage-light p-6 rounded-2xl border border-sage-soft">
+                <h3 class="text-base font-bold text-sage-dark mb-4 flex items-center">
+                    <i class="fa-solid fa-chart-pie mr-2"></i> Besin Ögesi, Kalori ve Yüzdelik Dağılım
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-xs border border-cream-border text-center">
+                        <span class="text-xs text-slate-500 font-medium">Karbonhidrat</span>
+                        <span id="res-cho" class="block text-lg font-bold text-slate-800 mt-1">0 g</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-xs border border-cream-border text-center">
+                        <span class="text-xs text-slate-500 font-medium">Protein</span>
+                        <span id="res-pro" class="block text-lg font-bold text-slate-800 mt-1">0 g</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-xs border border-cream-border text-center">
+                        <span class="text-xs text-slate-500 font-medium">Yağ</span>
+                        <span id="res-yag" class="block text-lg font-bold text-slate-800 mt-1">0 g</span>
+                    </div>
+                    <div class="bg-sage text-white p-4 rounded-xl shadow-xs text-center flex flex-col justify-center">
+                        <span class="text-xs text-sage-light font-medium uppercase tracking-wide">Toplam Enerji</span>
+                        <span id="res-kalori" class="block text-xl font-extrabold mt-1">0 kkal</span>
+                    </div>
+                </div>
+
+                <!-- Yüzdelik Dağılım Satırı -->
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div class="bg-white/80 p-3 rounded-xl text-center border border-cream-border">
+                        <span class="text-[11px] text-slate-500 block">CHO Enerji %</span>
+                        <span id="yuzde-cho" class="text-sm font-bold text-sage-dark">%0</span>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-xl text-center border border-cream-border">
+                        <span class="text-[11px] text-slate-500 block">Protein Enerji %</span>
+                        <span id="yuzde-pro" class="text-sm font-bold text-sage-dark">%0</span>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-xl text-center border border-cream-border">
+                        <span class="text-[11px] text-slate-500 block">Yağ Enerji %</span>
+                        <span id="yuzde-yag" class="text-sm font-bold text-sage-dark">%0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. & 8. KİTAPLIK VE RESMÎ KURUMLAR -->
+    <section class="max-w-5xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-8" id="kitaplar">
+        <div class="bg-white p-8 rounded-3xl border border-cream-border shadow-xs flex flex-col justify-between">
+            <div>
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-sage text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900">Beslenme Bilimi Kitaplığı</h3>
+                </div>
+                <ul class="space-y-4 text-sm font-light text-slate-600">
+                    <li class="border-b border-cream-border pb-3">
+                        <strong class="text-sage block font-semibold mb-1">Türkiye Beslenme Rehberi (TÜBER)</strong>
+                        <span>T.C. Sağlık Bakanlığı Yayınları — Ulusal beslenme standartları ve tabak modelleri.</span>
+                    </li>
+                    <li class="border-b border-cream-border pb-3">
+                        <strong class="text-sage block font-semibold mb-1">Beslenme (Prof. Dr. Ayşe Baysal)</strong>
+                        <span>Hatiboğlu Yayınevi — Türkiye'de diyetetiğin klasikleşmiş başvuru eseri.</span>
+                    </li>
+                    <li class="border-b border-cream-border pb-3">
+                        <strong class="text-sage block font-semibold mb-1">Beslenme Bilimi (Rhiannon Lambert)</strong>
+                        <span>TÜBİTAK Yayınları — Mikrobiyotadan kilo yönetimine grafikli rehber.</span>
+                    </li>
+                    <li>
+                        <strong class="text-sage block font-semibold mb-1">Klinik Beslenme için Temel Cep Kitabı</strong>
+                        <span>Binnur Okan Bakır & Ayşe Hümeyra Biçer.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl border border-cream-border shadow-xs flex flex-col justify-between" id="kurumlar">
+            <div>
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-sage text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900">Resmî Sağlık Kurumları</h3>
+                </div>
+                <ul class="space-y-4 text-sm font-light text-slate-600">
+                    <li>
+                        <a href="https://hsgm.saglik.gov.tr" target="_blank" class="block p-3 rounded-xl bg-sage-light hover:bg-sage hover:text-white border border-sage-soft transition text-sage font-medium">
+                            T.C. Sağlık Bakanlığı - Halk Sağlığı GM <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.tdd.org.tr" target="_blank" class="block p-3 rounded-xl bg-sage-light hover:bg-sage hover:text-white border border-sage-soft transition text-sage font-medium">
+                            Türkiye Diyetisyenler Derneği (TDD) <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.who.int" target="_blank" class="block p-3 rounded-xl bg-sage-light hover:bg-sage hover:text-white border border-sage-soft transition text-sage font-medium">
+                            Dünya Sağlık Örgütü (WHO) <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.efsa.europa.eu" target="_blank" class="block p-3 rounded-xl bg-sage-light hover:bg-sage hover:text-white border border-sage-soft transition text-sage font-medium">
+                            Avrupa Gıda Güvenliği Otoritesi (EFSA) <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. FORMSUBMIT ENTEGRE İLETİŞİM VE RANDEVU FORMU -->
+    <section class="max-w-2xl mx-auto px-4 py-16" id="iletisim">
+        <div class="text-center mb-10">
+            <span class="text-sage text-xs uppercase tracking-[0.2em] font-semibold">İletişim</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-1">Danışmanlık & İletişim Formu</h2>
+        </div>
+        <div class="bg-white p-8 md:p-12 rounded-3xl border border-cream-border shadow-xs">
+            <form action="https://formsubmit.co/kurtfikret2020@gmail.com" method="POST" class="space-y-6">
+                <input type="hidden" name="_captcha" value="false">
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Adınız Soyadınız</label>
+                    <input type="text" name="name" placeholder="Adınızı giriniz" required class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">E-Posta Adresiniz</label>
+                    <input type="email" name="email" placeholder="ornek@mail.com" required class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Hizmet / Konu</label>
+                    <select name="service" class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage">
+                        <option value="beslenme">Beslenme Danışmanlığı / Randevu</option>
+                        <option value="tarif">Tarif ve İçerik Önerisi</option>
+                        <option value="diger">Genel Soru ve Görüşler</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-sage uppercase tracking-wider mb-2">Mesajınız / Talebiniz</label>
+                    <textarea name="message" rows="4" placeholder="Mesajınızı buraya yazabilirsiniz..." required class="w-full bg-cream border border-cream-border rounded-xl p-3.5 text-sm text-slate-800 focus:outline-none focus:border-sage"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 bg-sage hover:bg-sage-dark text-white font-bold rounded-xl shadow-md transition text-sm">
+                    Mesajı Gönder ✉️
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Dinamik Açılır Pencere (Modal) -->
+    <div id="dynamicModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4" onclick="closeModalOnOutside(event)">
+        <div class="bg-white p-8 md:p-10 rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto relative border border-cream-border shadow-2xl modal-animation">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-900 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modalTitle" class="text-2xl font-bold text-sage mb-4"></h3>
+            <div id="modalBody" class="text-sm text-slate-600 leading-relaxed space-y-3 font-light"></div>
+        </div>
+    </div>
+
+    <!-- 12. FOOTER -->
+    <footer class="bg-white border-t border-cream-border py-12 text-center mt-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <h3 class="text-2xl font-bold text-sage mb-2">Dyt. Fikret Kurt</h3>
+            <p class="text-slate-600 text-sm font-light mb-6">Sağlıklı yaşam ve güncel beslenme rehberliği için sosyal medyada takip edin.</p>
+            <div class="mb-6">
+                <a href="https://www.instagram.com/dyt.fikretkurt" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-sage-light text-sage hover:bg-sage hover:text-white transition text-sm font-bold tracking-wide border border-sage-soft">
+                    <i class="fa-brands fa-instagram text-lg"></i> Instagram'da Takip Et: @dyt.fikretkurt
+                </a>
+            </div>
+            <p class="text-xs text-slate-400">&copy; 2026 Dyt. Fikret Kurt. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT FONKSİYONLARI -->
+    <script>
+        // Karşılama modalı otomatik kapanma
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                closeWelcomeModal();
+            }, 3000);
+        });
+
+        function closeWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            if (modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.style.display = 'none', 500);
+            }
+        }
+
+        // Mobil Menü Aç/Kapat
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('translate-x-full');
+        }
+
+        // Sekme Değiştirme (Kalori / VKİ)
+        function switchTab(tabId, btn) {
+            document.getElementById('calorieTab').classList.add('hidden');
+            document.getElementById('bmiTab').classList.add('hidden');
+            document.getElementById('tabCalBtn').className = "flex-1 py-3 text-xs md:text-sm font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
+            document.getElementById('tabBmiBtn').className = "flex-1 py-3 text-xs md:text-sm font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
+
+            document.getElementById(tabId).classList.remove('hidden');
+            btn.className = "flex-1 py-3 text-xs md:text-sm font-bold rounded-xl bg-sage text-white transition shadow-sm";
+        }
+
+        // Sağlıklı Menüler Verileri
+        const menuData = {
+            tuber: {
+                title: "🥗 TÜBER Tabanlı Dengeli Tabaklar",
+                content: "Türkiye Beslenme Rehberi (TÜBER) ilkelerine göre tabağınızın dört temel besin grubundan oluşması gerekir:<br><br>" +
+                         "• <strong>Sebze ve Meyveler:</strong> Tabağın yarısı lif, vitamin ve antioksidan deposu taze sebze/meyvelerle doldurulur.<br>" +
+                         "• <strong>Tahıllar:</strong> Tam buğday, bulgur veya yulaf gibi kompleks karbonhidratlar tercih edilir.<br>" +
+                         "• <strong>Protein Kaynakları:</strong> Et, tavuk, balık, yumurta veya kurubaklagiller yer alır.<br>" +
+                         "• <strong>Süt Grubu:</strong> Yoğurt, ayran veya kefir öğüne eşlik eder."
+            },
+            geleneksel: {
+                title: "🍲 Geleneksel & Modern Uyumlar",
+                content: "Türk mutfağının baş tacı geleneksel lezzetler, doğru pişirme teknikleriyle modernize edilmiştir:<br><br>" +
+                         "• <strong>Kuru Fasulye & Bulgur Pilavı:</strong> Bitkisel protein kalitesini artıran mükemmel bir geleneksel ikilidir.<br>" +
+                         "• <strong>Zeytinyağlılar:</strong> Sebzelerin kendi suyu ve sızma zeytinyağı ile düşük ısıda pişirilmesiyle besin değerleri korunur.<br>" +
+                         "• <strong>Fırınlama Teknikleri:</strong> Kızartma yerine fırında veya buharda pişirme yöntemleriyle kalori yükü azaltılır."
+            },
+            sifa: {
+                title: "🌿 Şifa Dolu Alternatifler",
+                content: "Bağışıklık sistemini güçlendiren ve hücresel yenilenmeyi destekleyen özel tarifler:<br><br>" +
+                         "• <strong>Zerdeçallı & Zencefilli Çorbalar:</strong> Anti-enflamatuar özellikleri sayesinde vücut direncini artırır.<br>" +
+                         "• <strong>Kefirli Smoothie Püresi:</strong> Bağırsak mikrobiyotasını besleyen probiyotik ve taze orman meyvesi karışımı.<br>" +
+                         "• <strong>Omega-3 Destekli Salatabaşlar:</strong> Çiğ ceviz, keten tohumu ve sızma zeytinyağı ile zenginleştirilmiş yeşillikler."
+            }
+        };
+
+        function openMenuModal(type) {
+            const data = menuData[type];
+            if (data) {
+                document.getElementById('modalTitle').innerText = data.title;
+                document.getElementById('modalBody').innerHTML = data.content;
+                document.getElementById('dynamicModal').classList.remove('hidden');
+                document.getElementById('dynamicModal').classList.add('flex');
+            }
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('dynamicModal').classList.add('hidden');
+            document.getElementById('dynamicModal').classList.remove('flex');
+        }
+
+        function closeModalOnOutside(event) {
+            if (event.target.id === 'dynamicModal') {
+                closeModal();
+            }
+        }
+
+        function alertArchived(weekNum) {
+            const archives = {
+                1: "Hafta #1 Arşivi: Antioksidanların Hücresel Gücü - Serbest radikallerle savaşan polifenol kaynakları ve renkli beslenme protokolleri.",
+                2: "Hafta #2 Arşivi: Gizli Şeker ve Metabolik Tuzaklar - Paketlenmiş gıdalardaki saklı şekerlerin insülin direnci üzerine etkileri.",
+                3: "Hafta #3 Arşivi: Kronobiyoloji ve Yemek Saatleri - Biyolojik saatimize göre beslenmenin kilo kontrolündeki kritik rolü."
+            };
+            document.getElementById('modalTitle').innerText = "Arşiv Konusu #" + weekNum;
+            document.getElementById('modalBody').innerHTML = archives[weekNum] || "Geçmiş konu detayları yükleniyor.";
+            document.getElementById('dynamicModal').classList.remove('hidden');
+            document.getElementById('dynamicModal').classList.add('flex');
+        }
+
+        // Kalori Hesaplama
+        function calculateCalories() {
+            const gender = document.getElementById('gender').value;
+            const age = parseFloat(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weightCal').value);
+            const height = parseFloat(document.getElementById('heightCal').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+            const disease = parseFloat(document.getElementById('disease').value);
+            const resultBox = document.getElementById('calorieResultBox');
+
+            if (isNaN(age) || isNaN(weight) || isNaN(height) || age <= 0 || weight <= 0 || height <= 0) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = "<h3 class='font-bold text-red-600 text-base'>Hata</h3><div class='text-red-500 font-medium'>Lütfen yaş, ağırlık ve boy bilgilerini eksiksiz ve geçerli sayılarla giriniz!</div>";
+                return;
+            }
+
+            let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+            if (gender === 'male') {
+                bmr += 5;
+            } else {
+                bmr -= 161;
+            }
+
+            let tdee = bmr * activity;
+            let finalCal = tdee * disease;
+
+            resultBox.classList.remove('hidden');
+            resultBox.innerHTML = `
+                <h3 class='font-bold text-sage text-base'>Danışman Hesaplama Sonucu:</h3>
+                <div class='text-slate-700'>Bazal Metabolizma Hızı (BMH): <strong>${Math.round(bmr)} kcal</strong></div>
+                <div class='text-slate-700'>Aktivite Dahil Toplam Harcama (TDEE): <strong>${Math.round(tdee)} kcal</strong></div>
+                <div class='font-bold text-slate-900 pt-2 text-base'>Klinik / Hastalık Faktörlü Hedef Alım: <strong>${Math.round(finalCal)} kcal / gün</strong></div>
+            `;
+        }
+
+        // VKİ Hesaplama
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weightBmi').value);
+            const heightCm = parseFloat(document.getElementById('heightBmi').value);
+            const resultBox = document.getElementById('bmiResultBox');
+
+            if (isNaN(weight) || isNaN(heightCm) || weight <= 0 || heightCm <= 0) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = "<h3 class='font-bold text-red-600 text-base'>Hata</h3><div class='text-red-500 font-medium'>Lütfen geçerli kilo ve boy değerleri giriniz!</div>";
+                return;
+            }
+
+            const heightM = heightCm / 100;
+            const bmi = (weight / (heightM * heightM)).toFixed(1);
+            let category = "";
+
+            if (bmi < 18.5) {
+                category = "Zayıf";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = "Normal Kilolu";
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = "Fazla Kilolu";
+            } else {
+                category = "Obez";
+            }
+
+            resultBox.classList.remove('hidden');
+            document.getElementById('bmiOutput').innerHTML = `VKİ Değeriniz: <strong>${bmi} (${category})</strong>`;
+        }
+
+        // Yeni Değişim Listeleri ve Enerji Yüzdeleri Hesaplama Algoritması
+        function hesaplaDegisim() {
+            const val = (id) => parseFloat(document.getElementById(id).value) || 0;
+
+            let sut = val('sut');
+            let et = val('et');
+            let eyg = val('eyg');
+            let sebze = val('sebze');
+            let meyve = val('meyve');
+            let seker = val('seker');
+            let yag = val('yag');
+
+            // Gram hesaplamaları[cite: 1]
+            let cho = (sut * 9) + (eyg * 15) + (sebze * 6) + (meyve * 15) + (seker * 5);
+            let pro = (sut * 6) + (et * 6) + (eyg * 2) + (sebze * 2);
+            let yag_g = (sut * 6) + (et * 5) + (yag * 5);
+
+            // Kalori hesaplamaları (CHO: 4, Pro: 4, Yağ: 9 kkal)[cite: 1]
+            let kaloriCho = cho * 4;
+            let kaloriPro = pro * 4;
+            let kaloriYag = yag_g * 9;
+            let toplamKalori = kaloriCho + kaloriPro + kaloriYag;
+
+            // Enerji yüzdeleri hesaplamaları
+            let yuzdeCho = toplamKalori > 0 ? (kaloriCho / toplamKalori) * 100 : 0;
+            let yuzdePro = toplamKalori > 0 ? (kaloriPro / toplamKalori) * 100 : 0;
+            let yuzdeYag = toplamKalori > 0 ? (kaloriYag / toplamKalori) * 100 : 0;
+
+            // Sonuçları ekrana basma
+            document.getElementById('res-cho').innerText = cho.toFixed(1) + " g";
+            document.getElementById('res-pro').innerText = pro.toFixed(1) + " g";
+            document.getElementById('res-yag').innerText = yag_g.toFixed(1) + " g";
+            document.getElementById('res-kalori').innerText = Math.round(toplamKalori) + " kkal";
+            
+            document.getElementById('yuzde-cho').innerText = "%" + yuzdeCho.toFixed(1);
+            document.getElementById('yuzde-pro').innerText = "%" + yuzdePro.toFixed(1);
+            document.getElementById('yuzde-yag').innerText = "%" + yuzdeYag.toFixed(1);
+        }
+    </script>
+</body>
+</html>
